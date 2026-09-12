@@ -28,8 +28,8 @@ Buka terminal di folder tempat file .indo berada, lalu jalankan.
 | Masalah | Solusi | 
 | :--- | :--- | 
 | `bash: indo: command not found` | `Pastikan direktori PATH Python sudah terdaftar di sistem OS kamu.` | 
-| `MasalahSolusibash: indo: command not foundPastikan direktori PATH Python sudah terdaftar di sistem OS kamu.Error: File 'x.indo' tidak ditemukan` | `Jalankan indo di folder tempat file .indo disimpan atau gunakan full path (indo /path/ke/main.indo).` | 
-
+| `MasalahSolusibash: indo: command not found` | `Jalankan indo di folder tempat file .indo disimpan atau gunakan full path (indo /path/ke/main.indo).` | 
+| `error: externally-managed-environment` | `Gunakan flag --break-system-packages saat pip install di Linux.` |
 
 ## 🚀 Cara Instalasi
 
