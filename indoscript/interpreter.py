@@ -5,6 +5,14 @@ class ReturnException(Exception):
     def __init__(self, value):
         self.value = value
 
+# Map tipe eksepsi Python bawaan ke Bahasa Indonesia
+KAMUS_EROR = {
+    "ZeroDivisionError": "KesalahanBagiNol",
+    "NameError": "KesalahanNama",
+    "TypeError": "KesalahanTipe",
+    "ValueError": "KesalahanNilai",
+}
+
 class Interpreter:
     def __init__(self):
         self.memori = {}
@@ -71,12 +79,14 @@ class Interpreter:
                 print(hasil)
 
             else:
-                print(f"Error di baris {baris_ke}: Perintah '{baris}' tidak dikenal.")
+                print(f"[KesalahanSintaks] Baris {baris_ke}: Perintah '{baris}' tidak dikenal.")
 
         except ReturnException:
             raise
         except Exception as e:
-            print(f"Error di baris {baris_ke}: {e}")
+            nama_eror = type(e).__name__
+            nama_id = KAMUS_EROR.get(nama_eror, nama_eror)
+            print(f"[{nama_id}] Baris {baris_ke}: {e}")
 
     def jalankan_blok(self, daftar_baris, memori_custom=None):
         memori_awal = self.memori
@@ -140,9 +150,56 @@ class Interpreter:
 
         self.memori = memori_awal
 
+
+def mulai_repl():
+    """Shell Interaktif untuk IndoScript"""
+    print("=== IndoScript 0.1.0 Interactive Shell ===")
+    print("Ketik 'keluar' atau tekan Ctrl+C untuk berhenti.\n")
+    
+    interpreter = Interpreter()
+    baris_ke = 1
+
+    while True:
+        try:
+            baris_input = input("indo> ")
+            if baris_input.strip() == "keluar":
+                break
+            if not baris_input.strip():
+                continue
+
+            daftar_baris = [(baris_ke, baris_input)]
+            baris_ke += 1
+
+            # Deteksi pembuka blok untuk mendukung multi-line REPL
+            b_strip = baris_input.strip()
+            butuh_blok = (
+                b_strip.startswith("fungsi ") or 
+                (b_strip.startswith("jika ") and b_strip.endswith(" maka")) or 
+                (b_strip.startswith("ulang ") and b_strip.endswith(" kali"))
+            )
+
+            if butuh_blok:
+                kedalaman = 1
+                while kedalaman > 0:
+                    sub_baris = input("...   ")
+                    s_strip = sub_baris.strip()
+                    if s_strip.startswith("fungsi ") or (s_strip.startswith("jika ") and s_strip.endswith(" maka")) or (s_strip.startswith("ulang ") and s_strip.endswith(" kali")):
+                        kedalaman += 1
+                    elif s_strip == "selesai":
+                        kedalaman -= 1
+                    daftar_baris.append((baris_ke, sub_baris))
+                    baris_ke += 1
+
+            interpreter.jalankan_blok(daftar_baris)
+
+        except (KeyboardInterrupt, EOFError):
+            print("\nSampai jumpa!")
+            break
+
+
 def main():
     if len(sys.argv) < 2:
-        print("Penggunaan: indo <nama_file.indo>")
+        mulai_repl()
     else:
         nama_file = sys.argv[1]
         try:
@@ -153,7 +210,7 @@ def main():
             interpreter = Interpreter()
             interpreter.jalankan_blok(daftar_baris)
         except FileNotFoundError:
-            print(f"Error: File '{nama_file}' tidak ditemukan.")
+            print(f"[BerkasTidakDitemukan] File '{nama_file}' tidak ditemukan.")
 
 if __name__ == "__main__":
     main()

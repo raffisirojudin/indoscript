@@ -43,7 +43,7 @@ pip install git+[https://github.com/raffisirojudin/indoscript.git](https://githu
 bash
 pip3 install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
 
-### 🐧 Linux / WSL (Ubuntu, Debian, Arch)
+🐧 Linux / WSL (Ubuntu, Debian, Arch)
 bash
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git) --break-system-packages
 
