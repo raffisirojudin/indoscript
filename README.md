@@ -16,6 +16,10 @@
 | `True` / `False` | `Benar` / `Salah` | Nilai Boolean |
 
 ---
+## 💻 Cara Penggunaan
+
+1. Buat File Skrip (.indo)
+Buat file baru di folder kerjamu, misalnya main.indo, lalu isi dengan kode IndoScript:
 
 ## 🚀 Cara Instalasi
 
@@ -24,10 +28,14 @@ Pastikan **Python 3.8+** dan **Git** sudah terpasang di sistemmu.
 ### 🪟 Windows (PowerShell / CMD)
 powershell
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
+
 🍎 macOS
+bash
 pip3 install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
+
 ### 🐧 Linux / WSL (Ubuntu, Debian, Arch)
 bash
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git) --break-system-packages
+
 📦 Isolasi via pipx (Opsional)
 pipx install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
