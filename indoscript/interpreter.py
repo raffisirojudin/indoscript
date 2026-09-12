@@ -13,6 +13,50 @@ KAMUS_EROR = {
     "ValueError": "KesalahanNilai",
 }
 
+TEKS_BANTUAN = """
+========================================
+       BANTUAN SINTAKS INDOSCRIPT       
+========================================
+1. Cetak Ke Layar:
+   cetak <ekspresi>
+   Contoh: cetak "Halo dunia"
+
+2. Simpan Variabel:
+   simpan <nama_var> = <nilai>
+   Contoh: simpan angka = 100
+
+3. Input Pengguna:
+   tanya <nama_var> = "<pesan prompt>"
+   Contoh: tanya nama = "Masukkan nama Anda:"
+
+4. Percabangan (Kondisi):
+   jika <kondisi> maka
+       <perintah>
+   kalau_tidak
+       <perintah>
+   selesai
+
+5. Perulangan:
+   ulang <jumlah> kali
+       <perintah>
+   selesai
+
+6. Fungsi:
+   fungsi <nama_fungsi>(<parameter1>, <parameter2>)
+       <perintah>
+       kembalikan <nilai>
+   selesai
+
+7. Pemanggilan Fungsi:
+   panggil <nama_fungsi>(<argumen>)
+   Contoh: panggil sapa("Rafi")
+
+8. Lainnya:
+   bantuan  : Menampilkan daftar sintaks ini
+   keluar   : Keluar dari REPL interaktif
+========================================
+"""
+
 class Interpreter:
     def __init__(self):
         self.memori = {}
@@ -52,7 +96,10 @@ class Interpreter:
 
     def eksekusi_baris(self, baris, baris_ke):
         try:
-            if baris.startswith("kembalikan "):
+            if baris in ("bantuan", "help"):
+                print(TEKS_BANTUAN)
+
+            elif baris.startswith("kembalikan "):
                 ekspresi = baris[11:].strip()
                 val = self.evaluasi_ekspresi(ekspresi, self.memori)
                 raise ReturnException(val)
@@ -154,7 +201,7 @@ class Interpreter:
 def mulai_repl():
     """Shell Interaktif untuk IndoScript"""
     print("=== IndoScript 0.1.0 Interactive Shell ===")
-    print("Ketik 'keluar' atau tekan Ctrl+C untuk berhenti.\n")
+    print("Ketik 'bantuan' untuk melihat daftar perintah, atau 'keluar' / Ctrl+C untuk berhenti.\n")
     
     interpreter = Interpreter()
     baris_ke = 1
