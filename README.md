@@ -19,13 +19,15 @@
 ## 💻 Cara Penggunaan
 
 1. Buat File Skrip (.indo)
-Buat file baru di folder kerjamu, misalnya main.indo, lalu isi dengan kode IndoScript:
+Buat file baru di folder kerjamu, misalnya main.indo, lalu isi dengan kode IndoScript.
+2. Jalankan via Terminal
+Buka terminal di folder tempat file .indo berada, lalu jalankan.
 
 ## 🚀 Cara Instalasi
 
 Pastikan **Python 3.8+** dan **Git** sudah terpasang di sistemmu.
 ```
-### 🪟 Windows (PowerShell / CMD)
+🪟 Windows (PowerShell / CMD)
 powershell
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
 
