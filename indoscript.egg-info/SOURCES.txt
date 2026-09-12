@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-indoscript/__init__.py
-indoscript/interpreter.py
-indoscript.egg-info/PKG-INFO
-indoscript.egg-info/SOURCES.txt
-indoscript.egg-info/dependency_links.txt
-indoscript.egg-info/entry_points.txt
-indoscript.egg-info/top_level.txt
