@@ -22,9 +22,12 @@
 Pastikan **Python 3.8+** dan **Git** sudah terpasang di sistemmu.
 ```
 ### 🪟 Windows (PowerShell / CMD)
-
+powershell
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
-
+🍎 macOS
+pip3 install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
 ### 🐧 Linux / WSL (Ubuntu, Debian, Arch)
-```bash
+bash
 pip install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git) --break-system-packages
+📦 Isolasi via pipx (Opsional)
+pipx install git+[https://github.com/raffisirojudin/indoscript.git](https://github.com/raffisirojudin/indoscript.git)
