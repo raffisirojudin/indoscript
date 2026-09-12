@@ -1,0 +1,16 @@
+# Mendefinisikan Fungsi dengan Nilai Kembalian (kembalikan)
+fungsi hitung_diskon(harga, persen)
+    simpan potong = harga * (persen / 100)
+    kembalikan harga - potong
+selesai
+
+tanya nama = "Masukkan nama Anda:"
+tanya total_belanja = "Masukkan total harga belanjaan:"
+
+# Menyimpan hasil fungsi langsung ke variabel
+simpan total_bayar = panggil hitung_diskon(total_belanja, 10)
+
+cetak "--- Nota Belanja ---"
+cetak "Pelanggan: " + nama
+cetak "Total yang harus dibayar setelah diskon 10%:"
+cetak total_bayar
