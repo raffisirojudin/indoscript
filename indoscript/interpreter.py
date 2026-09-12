@@ -1,5 +1,7 @@
 import sys
 import re
+import math
+import random
 
 class ReturnException(Exception):
     def __init__(self, value):
@@ -11,12 +13,14 @@ KAMUS_EROR = {
     "NameError": "KesalahanNama",
     "TypeError": "KesalahanTipe",
     "ValueError": "KesalahanNilai",
+    "IndexError": "KesalahanIndeks",
+    "FileNotFoundError": "BerkasTidakDitemukan",
 }
 
 TEKS_BANTUAN = """
-========================================
-       BANTUAN SINTAKS INDOSCRIPT       
-========================================
+==================================================
+           BANTUAN SINTAKS INDOSCRIPT             
+==================================================
 1. Cetak Ke Layar:
    cetak <ekspresi>
    Contoh: cetak "Halo dunia"
@@ -24,6 +28,7 @@ TEKS_BANTUAN = """
 2. Simpan Variabel:
    simpan <nama_var> = <nilai>
    Contoh: simpan angka = 100
+   Contoh: simpan buah = ["apel", "pisang"]
 
 3. Input Pengguna:
    tanya <nama_var> = "<pesan prompt>"
@@ -41,20 +46,36 @@ TEKS_BANTUAN = """
        <perintah>
    selesai
 
-6. Fungsi:
-   fungsi <nama_fungsi>(<parameter1>, <parameter2>)
+   selama <kondisi>
+       <perintah>
+   selesai
+
+6. Manipulasi Daftar (List):
+   tambah <nama_list> = <nilai>
+   hapus <nama_list> = <nilai>
+   ukuran(<nama_list>)  # Mendapatkan panjang list/teks
+
+7. Operasi Berkas (File I/O):
+   tulis_file "<path_file>" = "<isi_teks>"
+   baca_file("<path_file>")
+
+8. Fungsi Bawaan Matematika & Acak:
+   acak(<min>, <max>)   # Angka acak bulat
+   akar(<angka>)        # Akar kuadrat
+   pangkat(<x>, <y>)    # x dipangkatkan y
+
+9. Fungsi Kustom:
+   fungsi <nama_fungsi>(<param1>, <param2>)
        <perintah>
        kembalikan <nilai>
    selesai
 
-7. Pemanggilan Fungsi:
    panggil <nama_fungsi>(<argumen>)
-   Contoh: panggil sapa("Rafi")
 
-8. Lainnya:
-   bantuan  : Menampilkan daftar sintaks ini
+10. Perintah Sistem:
+   bantuan  : Menampilkan daftar sintaks me-refresh ingatan sintaks
    keluar   : Keluar dari REPL interaktif
-========================================
+==================================================
 """
 
 class Interpreter:
@@ -90,7 +111,12 @@ class Interpreter:
 
         context = {
             "__panggil": lambda fn_name, *args: self.panggil_fungsi(fn_name, *args),
-            "str": str, "int": int, "float": float, "len": len, "list": list
+            "str": str, "int": int, "float": float, "len": len, "list": list, "dict": dict,
+            "ukuran": len,
+            "akar": math.sqrt,
+            "pangkat": pow,
+            "acak": random.randint,
+            "baca_file": lambda path: open(path, "r", encoding="utf-8").read(),
         }
         return eval(ekspresi_mod, context, memori_lokal)
 
@@ -119,6 +145,34 @@ class Interpreter:
                 nama_var = bagian[0].strip()
                 ekspresi = bagian[1].strip()
                 self.memori[nama_var] = self.evaluasi_ekspresi(ekspresi, self.memori)
+
+            elif baris.startswith("tambah "):
+                bagian = baris[7:].split("=", 1)
+                nama_var = bagian[0].strip()
+                nilai = self.evaluasi_ekspresi(bagian[1].strip(), self.memori)
+                if nama_var in self.memori and isinstance(self.memori[nama_var], list):
+                    self.memori[nama_var].append(nilai)
+                else:
+                    raise Exception(f"Variabel '{nama_var}' bukan daftar (list).")
+
+            elif baris.startswith("hapus "):
+                bagian = baris[6:].split("=", 1)
+                nama_var = bagian[0].strip()
+                nilai = self.evaluasi_ekspresi(bagian[1].strip(), self.memori)
+                if nama_var in self.memori and isinstance(self.memori[nama_var], list):
+                    if nilai in self.memori[nama_var]:
+                        self.memori[nama_var].remove(nilai)
+                    else:
+                        raise Exception(f"Elemen '{nilai}' tidak ditemukan di daftar '{nama_var}'.")
+                else:
+                    raise Exception(f"Variabel '{nama_var}' bukan daftar (list).")
+
+            elif baris.startswith("tulis_file "):
+                bagian = baris[11:].split("=", 1)
+                file_path = self.evaluasi_ekspresi(bagian[0].strip(), self.memori)
+                isi_teks = self.evaluasi_ekspresi(bagian[1].strip(), self.memori)
+                with open(str(file_path), "w", encoding="utf-8") as f:
+                    f.write(str(isi_teks))
 
             elif baris.startswith("cetak "):
                 isi = baris[6:].strip()
@@ -172,6 +226,16 @@ class Interpreter:
                 for _ in range(jumlah):
                     self.jalankan_blok(blok)
 
+            elif baris.startswith("selama "):
+                kondisi = baris[7:].strip()
+                i += 1
+                blok_selama = []
+                while i < len(daftar_baris) and daftar_baris[i][1].strip() != "selesai":
+                    blok_selama.append(daftar_baris[i])
+                    i += 1
+                while self.evaluasi_ekspresi(kondisi, self.memori):
+                    self.jalankan_blok(blok_selama)
+
             elif baris.startswith("jika ") and baris.endswith(" maka"):
                 kondisi = baris[5:-5].strip()
                 i += 1
@@ -221,6 +285,7 @@ def mulai_repl():
             b_strip = baris_input.strip()
             butuh_blok = (
                 b_strip.startswith("fungsi ") or 
+                b_strip.startswith("selama ") or
                 (b_strip.startswith("jika ") and b_strip.endswith(" maka")) or 
                 (b_strip.startswith("ulang ") and b_strip.endswith(" kali"))
             )
@@ -230,7 +295,7 @@ def mulai_repl():
                 while kedalaman > 0:
                     sub_baris = input("...   ")
                     s_strip = sub_baris.strip()
-                    if s_strip.startswith("fungsi ") or (s_strip.startswith("jika ") and s_strip.endswith(" maka")) or (s_strip.startswith("ulang ") and s_strip.endswith(" kali")):
+                    if s_strip.startswith("fungsi ") or s_strip.startswith("selama ") or (s_strip.startswith("jika ") and s_strip.endswith(" maka")) or (s_strip.startswith("ulang ") and s_strip.endswith(" kali")):
                         kedalaman += 1
                     elif s_strip == "selesai":
                         kedalaman -= 1
