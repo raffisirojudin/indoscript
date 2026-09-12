@@ -23,6 +23,14 @@ Buat file baru di folder kerjamu, misalnya main.indo, lalu isi dengan kode IndoS
 2. Jalankan via Terminal
 Buka terminal di folder tempat file .indo berada, lalu jalankan.
 
+## ❓ Kendala Umum (Troubleshooting)
+
+| Masalah | Solusi | 
+| :--- | :--- | 
+| `bash: indo: command not found` | `Pastikan direktori PATH Python sudah terdaftar di sistem OS kamu.` | 
+| `MasalahSolusibash: indo: command not foundPastikan direktori PATH Python sudah terdaftar di sistem OS kamu.Error: File 'x.indo' tidak ditemukan` | `Jalankan indo di folder tempat file .indo disimpan atau gunakan full path (indo /path/ke/main.indo).` | 
+
+
 ## 🚀 Cara Instalasi
 
 Pastikan **Python 3.8+** dan **Git** sudah terpasang di sistemmu.
